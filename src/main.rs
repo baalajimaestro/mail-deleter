@@ -1,3 +1,11 @@
+//
+//Copyright © 2020 Maestro Creativescape
+//
+// SPDX-License-Identifier: GPL-3.0
+//
+// Simple Mail Deleter Script
+//
+
 use imap;
 use native_tls;
 use regex::Regex;
@@ -31,10 +39,10 @@ fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
     let re = Regex::new(r"(insert string in message body, even 1 matching would do)+").unwrap();
     if re.is_match(&body) {
         imap_session.store(format!("{}", message.message), "+FLAGS (\\Deleted)").unwrap();
-        println!("DELETED smth!");
+        println!("DELETED SPAM Target!");
     }
     else {
-        println!("Doesnt match");
+        println!("Mail Doesnt match");
     }
     }
     imap_session.expunge().unwrap();
