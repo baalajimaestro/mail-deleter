@@ -7,7 +7,6 @@
 //
 
 use imap;
-use native_tls;
 use regex::Regex;
 
 fn main() {
@@ -18,12 +17,11 @@ fn main() {
 
 fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
     let domain = "imap.mail.com";
-    let tls = native_tls::TlsConnector::builder().build().unwrap();
-    let client = imap::connect((domain, 993), domain, &tls).unwrap();
+    let client = imap::ClientBuilder::new(domain, 993).native_tls()?;
     let mut imap_session = client
         .login("mail username", "mail pwd")
         .map_err(|e| e.0)?;
-    let inbox = imap_session.select("Spam")?;
+    let inbox = imap_session.select("Inbox")?;
     for i in 1 as u32..inbox.exists {
 
     let messages = imap_session.fetch( (inbox.exists-i).to_string(), "RFC822")?;

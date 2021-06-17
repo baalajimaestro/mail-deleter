@@ -190,7 +190,6 @@ version = "0.1.0"
 dependencies = [
  "base64",
  "imap",
- "native-tls",
  "regex",
  "rustls-connector",
 ]
