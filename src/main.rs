@@ -30,9 +30,9 @@ fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
     } else {
         return Ok(None);
     };
-    let body = message.body().expect("message did not have a body!");
+    let body = message.body().unwrap_or("NULL".as_bytes());
     let body = std::str::from_utf8(body)
-        .expect("message was not valid utf-8")
+        .unwrap_or("NULL")
         .to_string();
     let re = Regex::new(r"(insert string in message body, even 1 matching would do)+").unwrap();
     if re.is_match(&body) {
