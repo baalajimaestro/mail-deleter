@@ -22,6 +22,7 @@ fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
         .login("mail username", "mail pwd")
         .map_err(|e| e.0)?;
     let inbox = imap_session.select("Inbox")?;
+    let re = Regex::new(r"(insert string in message body, even 1 matching would do)+").unwrap();
     for i in 1 as u32..inbox.exists {
 
     let messages = imap_session.fetch( (inbox.exists-i).to_string(), "RFC822")?;
@@ -34,7 +35,6 @@ fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
     let body = std::str::from_utf8(body)
         .unwrap_or("NULL")
         .to_string();
-    let re = Regex::new(r"(insert string in message body, even 1 matching would do)+").unwrap();
     if re.is_match(&body) {
         imap_session.store(format!("{}", message.message), "+FLAGS (\\Deleted)").unwrap();
         println!("DELETED SPAM Target!");
