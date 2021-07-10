@@ -17,12 +17,15 @@ fn main() {
 
 fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
     let domain = "imap.mail.com";
+    let username = std::env::args().nth(1).expect("no username given");
+    let password = std::env::args().nth(2).expect("no password given");
+    let pattern = std::env::args().nth(3).expect("no pattern given");
     let client = imap::ClientBuilder::new(domain, 993).native_tls()?;
     let mut imap_session = client
-        .login("mail username", "mail pwd")
+        .login(username, password)
         .map_err(|e| e.0)?;
     let inbox = imap_session.select("Inbox")?;
-    let re = Regex::new(r"(insert string in message body, even 1 matching would do)+").unwrap();
+    let re = Regex::new(format!("({})+", &pattern).as_str()).unwrap();
     for i in 1 as u32..inbox.exists {
 
     let messages = imap_session.fetch( (inbox.exists-i).to_string(), "RFC822")?;
