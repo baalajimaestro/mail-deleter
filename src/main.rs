@@ -40,9 +40,6 @@ fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
         imap_session.store(format!("{}", message.message), "+FLAGS (\\Deleted)").unwrap();
         println!("DELETED SPAM Target!");
     }
-    else {
-        println!("Mail Doesnt match");
-    }
     }
     imap_session.expunge().unwrap();
     imap_session.logout()?;
