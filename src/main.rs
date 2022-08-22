@@ -1,5 +1,5 @@
 //
-//Copyright © 2020 Maestro Creativescape
+//Copyright © 2020-22 Maestro Creativescape
 //
 // SPDX-License-Identifier: GPL-3.0
 //
@@ -10,8 +10,6 @@ use imap;
 use regex::Regex;
 
 fn main() {
-    // To connect to the gmail IMAP server with this you will need to allow unsecure apps access.
-    // See: https://support.google.com/accounts/answer/6010255?hl=en
     fetch_inbox_top().unwrap();
 }
 
