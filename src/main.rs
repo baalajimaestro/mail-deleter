@@ -9,7 +9,7 @@
 use imap;
 use regex::Regex;
 use std::fs::File;
-use std::io::{self, prelude::*, BufReader};
+use std::io::{prelude::*, BufReader};
 
 fn main() {
     fetch_inbox_top().unwrap();
@@ -49,5 +49,6 @@ fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
     }
     imap_session.expunge().unwrap();
     imap_session.logout()?;
+    println!("\n\n\n********PURGED ALL REQUESTED MAIL********");
     Ok(Some("logout".to_string()))
 }
