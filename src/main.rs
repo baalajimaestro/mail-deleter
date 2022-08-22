@@ -17,9 +17,10 @@ fn main() {
 
 fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
     let domain = std::env::var("IMAP_DOMAIN").unwrap_or("none".to_string());
+    let imap_port = std::env::var("IMAP_PORT").unwrap_or("none".to_string()).parse::<u16>().unwrap();
     let username = std::env::var("IMAP_USERNAME").unwrap_or("none".to_string());
     let password = std::env::var("IMAP_PASSWORD").unwrap_or("none".to_string());
-    let client = imap::ClientBuilder::new(domain, 993).native_tls()?;
+    let client = imap::ClientBuilder::new(domain, imap_port).native_tls()?;
     let mut imap_session = client.login(username, password).map_err(|e| e.0)?;
     let inbox = imap_session.select("Inbox")?;
     let subject = Regex::new(r"Subject: (.*)").unwrap();
@@ -28,6 +29,9 @@ fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
 
     for line in reader.lines() {
         let re = Regex::new(format!("({})+", line?).as_str()).unwrap();
+        if re.as_str() == "()+" {
+            break;
+        }
         println!("Working on Pattern: {}", re.as_str());
     for i in 1 as u32..inbox.exists {
         let messages = imap_session.fetch((inbox.exists - i).to_string(), "RFC822")?;
