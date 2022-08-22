@@ -1,8 +1,12 @@
 # Mail Deleter
 
-Recently, I had a spammer spamming over atleast 1k emails with the same exact text. I decided manual deletion is literally impossible.
+Filtering mails that come through different mail ids or from ids that also carry valuable info, can be hard
 
-This script might be helpful for others who are hopeless due to such a spam!
+This simple program deletes mail based on all the info the `Show Original` section of your mail shows. You can choose the mailing list, or any parameter there and add it to `patterns.txt` before executing
+You can add as many patterns as you wish, and all of these patterns are parsed as regex patterns, so feel free to do that as well.
 
-Just insert your email id, password (for gmail you need to see the comment), in the respective places
-And let it run!
+Required variables:
+`IMAP_DOMAIN`: IMAP Server Domain
+`IMAP_PORT`: IMAP Server Port
+`IMAP_USERNAME`: IMAP Authentication Username
+`IMAP_PASSWORD`: IMAP Authentication Password
