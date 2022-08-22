@@ -17,7 +17,10 @@ fn main() {
 
 fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
     let domain = std::env::var("IMAP_DOMAIN").unwrap_or("none".to_string());
-    let imap_port = std::env::var("IMAP_PORT").unwrap_or("none".to_string()).parse::<u16>().unwrap();
+    let imap_port = std::env::var("IMAP_PORT")
+        .unwrap_or("none".to_string())
+        .parse::<u16>()
+        .unwrap();
     let username = std::env::var("IMAP_USERNAME").unwrap_or("none".to_string());
     let password = std::env::var("IMAP_PASSWORD").unwrap_or("none".to_string());
     let client = imap::ClientBuilder::new(domain, imap_port).native_tls()?;
@@ -33,23 +36,23 @@ fn fetch_inbox_top() -> imap::error::Result<Option<String>> {
             break;
         }
         println!("Working on Pattern: {}", re.as_str());
-    for i in 1 as u32..inbox.exists {
-        let messages = imap_session.fetch((inbox.exists - i).to_string(), "RFC822")?;
-        let message = if let Some(m) = messages.iter().next() {
-            m
-        } else {
-            return Ok(None);
-        };
-        let body = message.body().unwrap_or("NULL".as_bytes());
-        let body = std::str::from_utf8(body).unwrap_or("NULL").to_string();
-        if re.is_match(&body) {
-            imap_session
-                .store(format!("{}", message.message), "+FLAGS (\\Deleted)")
-                .unwrap();
-            let subject_re = subject.captures(&body).unwrap();
-            println!("Deleted Mail with Subject: {}", &subject_re[1]);
+        for i in 1 as u32..inbox.exists {
+            let messages = imap_session.fetch((inbox.exists - i).to_string(), "RFC822")?;
+            let message = if let Some(m) = messages.iter().next() {
+                m
+            } else {
+                return Ok(None);
+            };
+            let body = message.body().unwrap_or("NULL".as_bytes());
+            let body = std::str::from_utf8(body).unwrap_or("NULL").to_string();
+            if re.is_match(&body) {
+                imap_session
+                    .store(format!("{}", message.message), "+FLAGS (\\Deleted)")
+                    .unwrap();
+                let subject_re = subject.captures(&body).unwrap();
+                println!("Deleted Mail with Subject: {}", &subject_re[1]);
+            }
         }
-    }
     }
     imap_session.expunge().unwrap();
     imap_session.logout()?;
