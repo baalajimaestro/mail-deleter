@@ -1,0 +1,10 @@
+docker-build:
+  image: docker:latest
+  stage: build
+  services:
+    - docker:dind
+  before_script:
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" registry.baalajimaestro.me --password-stdin
+  script:
+    - docker build . -t registry.baalajimaestro.me/baalajimaestro/mail-deleter:latest
+    - docker push registry.baalajimaestro.me/baalajimaestro/mail-deleter:latest
